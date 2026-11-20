@@ -1,0 +1,300 @@
+/* ==========================================================================
+   MOTION & INTERACTION CHOREOGRAPHY
+   GPU-composited transitions, editorial reveals, 18s portrait timeline,
+   kinetic marquee, and accessible reduced-motion / Motion-off support.
+   ========================================================================== */
+
+/* ==================== KEYFRAMES ==================== */
+@keyframes pulseRing {
+  0% {
+    transform: scale(0.9);
+    opacity: 0.65;
+  }
+  70% {
+    transform: scale(1.9);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1.9);
+    opacity: 0;
+  }
+}
+
+@keyframes marqueeScroll {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-33.3333%, 0, 0);
+  }
+}
+
+@keyframes portraitKenBurns {
+  0% {
+    transform: scale(1) translate3d(0, 0, 0);
+  }
+  50% {
+    transform: scale(1.065) translate3d(0, -1.2%, 0);
+  }
+  100% {
+    transform: scale(1.02) translate3d(0, 0, 0);
+  }
+}
+
+@keyframes segmentProgress {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes deckFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ==================== EDITORIAL LINE MASK & REVEALS ==================== */
+.line-mask {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.08em;
+  margin-bottom: -0.08em;
+}
+
+.line-inner {
+  display: block;
+}
+
+html.js-ready[data-motion="on"] .line-inner {
+  opacity: 0;
+  transform: translateY(105%);
+  transition:
+    transform 0.95s var(--ease-out) var(--delay, 0s),
+    opacity 0.65s var(--ease-out) var(--delay, 0s);
+  will-change: transform, opacity;
+}
+
+html.js-ready.hero-loaded[data-motion="on"] .line-inner {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+html.js-ready[data-motion="on"] .reveal-up {
+  opacity: 0;
+  transform: translateY(20px);
+  transition:
+    transform 0.85s var(--ease-out) var(--delay, 0s),
+    opacity 0.7s var(--ease-out) var(--delay, 0s);
+  will-change: transform, opacity;
+}
+
+html.js-ready.hero-loaded[data-motion="on"] .reveal-up {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+html.js-ready[data-motion="on"] .reveal {
+  opacity: 0;
+  transform: translateY(26px);
+  transition:
+    transform 0.85s var(--ease-out) var(--delay, 0s),
+    opacity 0.75s var(--ease-out) var(--delay, 0s);
+  will-change: transform, opacity;
+}
+
+html.js-ready[data-motion="on"] .reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ==================== MARQUEE ==================== */
+html[data-motion="on"] .marquee-track {
+  animation: marqueeScroll 30s linear infinite;
+  will-change: transform;
+}
+
+.marquee-band:hover .marquee-track {
+  animation-play-state: paused;
+}
+
+/* ==================== 18-SECOND PORTRAIT CHOREOGRAPHY ==================== */
+html[data-motion="on"] .portrait-card[data-state="playing"] .portrait-card__img {
+  animation: portraitKenBurns 18s ease-in-out forwards;
+}
+
+html[data-motion="on"] .portrait-card[data-state="paused"] .portrait-card__img {
+  animation: portraitKenBurns 18s ease-in-out forwards;
+  animation-play-state: paused;
+}
+
+html[data-motion="on"] .portrait-card[data-state="ended"] .portrait-card__img {
+  transform: scale(1.02);
+}
+
+.timeline-seg.is-active .timeline-seg__fill {
+  animation: segmentProgress 6s linear forwards;
+}
+
+.portrait-card[data-state="paused"] .timeline-seg.is-active .timeline-seg__fill {
+  animation-play-state: paused;
+}
+
+.portrait-card[data-state="ended"] .timeline-seg__fill {
+  animation: none;
+  transform: scaleX(1);
+}
+
+/* ==================== PROCESS DECK TRANSITION ==================== */
+.process-stage.is-switching .process-plate__num,
+.process-stage.is-switching .process-plate__title,
+.process-stage.is-switching .process-content {
+  animation: deckFadeIn 0.45s var(--ease-out) both;
+}
+
+/* ==================== LANGUAGE CROSS-FADE ==================== */
+body.lang-transitioning main {
+  opacity: 0.75;
+  transition: opacity 0.16s ease;
+}
+
+main {
+  transition: opacity 0.28s ease;
+}
+
+/* ==================== SUBTLE CUSTOM EDITORIAL CURSOR ==================== */
+.cursor-dot,
+.cursor-ring {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 1100;
+  opacity: 0;
+  will-change: transform, opacity;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  html[data-motion="on"].has-cursor .cursor-dot,
+  html[data-motion="on"].has-cursor .cursor-ring {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .cursor-dot {
+    width: 7px;
+    height: 7px;
+    margin: -3.5px 0 0 -3.5px;
+    border-radius: 50%;
+    background: var(--accent);
+    transition: opacity 0.25s ease, transform 0.2s var(--ease-out);
+  }
+
+  .cursor-ring {
+    width: 34px;
+    height: 34px;
+    margin: -17px 0 0 -17px;
+    border-radius: 50%;
+    border: 1px solid rgba(200, 90, 50, 0.42);
+    background: transparent;
+    transition:
+      width 0.3s var(--ease-out),
+      height 0.3s var(--ease-out),
+      margin 0.3s var(--ease-out),
+      background-color 0.3s var(--ease-out),
+      border-color 0.3s var(--ease-out),
+      opacity 0.25s ease;
+  }
+
+  .cursor-ring__label {
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #FAF7F2;
+    opacity: 0;
+    transform: scale(0.8);
+    transition: opacity 0.2s ease, transform 0.25s var(--ease-out);
+  }
+
+  html.cursor-visible .cursor-dot,
+  html.cursor-visible .cursor-ring {
+    opacity: 1;
+  }
+
+  html.cursor-hover .cursor-ring {
+    width: 52px;
+    height: 52px;
+    margin: -26px 0 0 -26px;
+    border-color: var(--accent);
+    background: rgba(200, 90, 50, 0.08);
+  }
+
+  html.cursor-label-active .cursor-dot {
+    opacity: 0;
+  }
+
+  html.cursor-label-active .cursor-ring {
+    width: 68px;
+    height: 68px;
+    margin: -34px 0 0 -34px;
+    background: var(--accent);
+    border-color: var(--accent);
+  }
+
+  html.cursor-label-active .cursor-ring__label {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* ==================== MOTION OFF & REDUCED MOTION ==================== */
+html[data-motion="off"] *,
+html[data-motion="off"] *::before,
+html[data-motion="off"] *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+}
+
+html[data-motion="off"] .reveal,
+html[data-motion="off"] .reveal-up,
+html[data-motion="off"] .line-inner {
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+html[data-motion="off"] .marquee-track {
+  animation: none !important;
+}
+
+html[data-motion="off"] .portrait-card__img {
+  animation: none !important;
+  transform: none !important;
+}
+
+html[data-motion="off"] .portrait-timeline,
+html[data-motion="off"] .portrait-btn {
+  display: none;
+}
+
+html[data-motion="off"] .cursor-dot,
+html[data-motion="off"] .cursor-ring {
+  display: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html:not([data-motion-override]) .marquee-track,
+  html:not([data-motion-override]) .status-dot::after {
+    animation: none;
+  }
+}
