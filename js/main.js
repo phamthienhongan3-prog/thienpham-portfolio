@@ -887,7 +887,39 @@
         if (!target) return;
         root.classList.remove("cursor-hover", "cursor-label-active");
       });
+
+      // Clear hover labels on scroll (pointer may stay still while content moves underneath)
+      window.addEventListener(
+        "scroll",
+        () => {
+          root.classList.remove("cursor-hover", "cursor-label-active");
+        },
+        { passive: true }
+      );
     }
+  }
+
+  /* ==================== FEATURED FILM (YouTube lite facade) ==================== */
+  const filmPlayer = qs("#film-player");
+  const filmPlay = qs("#film-play");
+  if (filmPlayer && filmPlay) {
+    const ytId = filmPlayer.dataset.yt;
+    const posterImg = qs("img", filmPlay);
+    if (posterImg) {
+      posterImg.addEventListener("error", () => {
+        posterImg.src = `https://i.ytimg.com/vi/${ytId}/hqdefault.jpg`;
+      }, { once: true });
+    }
+    filmPlay.addEventListener("click", () => {
+      const iframe = document.createElement("iframe");
+      iframe.src = `https://www.youtube-nocookie.com/embed/${ytId}?autoplay=1&rel=0&modestbranding=1&playsinline=1`;
+      iframe.title = "Intro — Thien Pham";
+      iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
+      iframe.allowFullscreen = true;
+      iframe.referrerPolicy = "strict-origin-when-cross-origin";
+      filmPlayer.innerHTML = "";
+      filmPlayer.appendChild(iframe);
+    });
   }
 
   /* ==================== BOOTSTRAP ==================== */
