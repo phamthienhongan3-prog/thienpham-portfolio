@@ -16,6 +16,27 @@
   <meta property="og:url" content="https://thienpham.cloud/" />
   <meta property="og:image" content="https://thienpham.cloud/assets/portrait.webp" />
 
+  <link rel="canonical" href="https://thienpham.cloud/" />
+  <meta name="twitter:card" content="summary_large_image" />
+
+  <!-- Structured data: Person -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Huynh Thien Pham",
+    "alternateName": "Thien Pham Huynh",
+    "jobTitle": "Marketer & Content Creator",
+    "url": "https://thienpham.cloud/",
+    "image": "https://thienpham.cloud/assets/portrait.webp",
+    "email": "mailto:thienpht101@gmail.com",
+    "address": { "@type": "PostalAddress", "addressLocality": "Can Tho", "addressCountry": "VN" },
+    "alumniOf": { "@type": "CollegeOrUniversity", "name": "FPT University" },
+    "knowsAbout": ["Marketing", "Content creation", "AI video production", "Scriptwriting", "SEO", "Consumer behaviour research"],
+    "sameAs": ["https://www.linkedin.com/in/phamhuynhthien"]
+  }
+  </script>
+
   <!-- Editorial Warm Terracotta SVG Favicon -->
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23171513'/%3E%3Ctext x='20' y='46' font-family='Georgia,serif' font-style='italic' font-size='40' fill='%23FAF7F2'%3Et%3C/text%3E%3Ccircle cx='44' cy='43' r='4.5' fill='%23C85A32'/%3E%3C/svg%3E" />
 
@@ -162,6 +183,13 @@
               </span>
             </a>
 
+            <a href="#film" class="link-play">
+              <span class="link-play__icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.14v13.72a1 1 0 0 0 1.5.86l11-6.86a1 1 0 0 0 0-1.72l-11-6.86A1 1 0 0 0 8 5.14z"/></svg>
+              </span>
+              <span data-i18n="hero.ctaFilm">Watch my intro</span>
+            </a>
+
             <a href="#careers" class="link-editorial">
               <span data-i18n="hero.ctaSecondary">Looking to hire?</span>
               <span class="link-editorial__arrow" aria-hidden="true">↗</span>
@@ -281,6 +309,44 @@
           <span class="marquee-star">✦</span>
           <span class="marquee-item is-serif" data-i18n="marquee.item4">Creative direction</span>
           <span class="marquee-star">✦</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== FEATURED FILM (YouTube lite facade) ==================== -->
+    <section class="section film-section" id="film">
+      <div class="container">
+        <div class="section-head reveal">
+          <span class="eyebrow" data-i18n="film.kicker">Featured film</span>
+          <div class="section-head__split">
+            <h2 class="section-title">
+              <span data-i18n="film.title1">See the work.</span>
+              <em data-i18n="film.title2">In motion.</em>
+            </h2>
+            <p class="section-subtitle" data-i18n="film.subtitle">
+              A short introduction film I created — the fastest way to get a feel for my storytelling and visual style.
+            </p>
+          </div>
+        </div>
+
+        <div class="film-player reveal" id="film-player" data-yt="V4y4GifR2js">
+          <button type="button" class="film-player__poster" id="film-play" aria-label="Play video: Intro — Thien Pham" data-i18n-aria="film.playAria" data-cursor="Play">
+            <img
+              src="https://i.ytimg.com/vi/V4y4GifR2js/maxresdefault.jpg"
+              alt="Intro — Thien Pham, video thumbnail"
+              loading="lazy"
+              width="1280"
+              height="720"
+            />
+            <span class="film-player__scrim" aria-hidden="true"></span>
+            <span class="film-player__play" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.14v13.72a1 1 0 0 0 1.5.86l11-6.86a1 1 0 0 0 0-1.72l-11-6.86A1 1 0 0 0 8 5.14z"/></svg>
+            </span>
+            <span class="film-player__meta">
+              <span class="film-player__label" data-i18n="film.label">Intro film</span>
+              <span class="film-player__title">Intro — Thien Pham</span>
+            </span>
+          </button>
         </div>
       </div>
     </section>
@@ -751,6 +817,34 @@
             </div>
           </div>
         </div>
+
+        <!-- My AI Stack -->
+        <div class="stack-block reveal">
+          <div class="stack-block__head">
+            <span class="eyebrow" data-i18n="stack.kicker">My AI stack</span>
+            <p class="stack-block__sub" data-i18n="stack.subtitle">The tools behind my workflow — from the first idea to the final frame.</p>
+          </div>
+          <div class="stack-grid">
+            <article class="stack-card spotlight-card">
+              <div class="stack-card__mark stack-card__mark--claude" aria-hidden="true">✳</div>
+              <div>
+                <h3 class="stack-card__name">Claude</h3>
+                <p class="stack-card__role" data-i18n="stack.claudeRole">Ideas, scripts &amp; prompt writing</p>
+                <p class="stack-card__desc" data-i18n="stack.claudeDesc">Turning a brief into concepts, scripts, storyboards and precise visual prompts.</p>
+              </div>
+              <span class="stack-card__step mono-idx">01</span>
+            </article>
+            <article class="stack-card spotlight-card">
+              <div class="stack-card__mark stack-card__mark--higgs" aria-hidden="true">◐</div>
+              <div>
+                <h3 class="stack-card__name">Higgsfield</h3>
+                <p class="stack-card__role" data-i18n="stack.higgsRole">AI video &amp; motion production</p>
+                <p class="stack-card__desc" data-i18n="stack.higgsDesc">Generating cinematic shots, camera motion and product visuals for campaigns.</p>
+              </div>
+              <span class="stack-card__step mono-idx">02</span>
+            </article>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -972,6 +1066,13 @@
           </div>
 
           <dl class="meta-ledger meta-ledger--spacious">
+            <div class="meta-ledger__row">
+              <dt data-i18n="about.styleLabel">Working style</dt>
+              <dd>
+                <strong data-i18n="about.styleVal">Enthusiastic · Patient</strong>
+                <span class="ledger-desc" data-i18n="about.styleDesc">I bring energy to every brief and the patience to refine each detail until it’s right.</span>
+              </dd>
+            </div>
             <div class="meta-ledger__row">
               <dt data-i18n="about.eduLabel">Education</dt>
               <dd>
