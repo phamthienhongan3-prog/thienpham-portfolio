@@ -156,7 +156,16 @@
       e.preventDefault();
       closeMobileMenu();
 
-      const offset = href === "#home" ? 0 : -80;
+      if (href === "#home") {
+        if (lenis && motionEnabled) {
+          lenis.scrollTo(0);
+        } else {
+          window.scrollTo({ top: 0, behavior: motionEnabled ? "smooth" : "auto" });
+        }
+        return;
+      }
+
+      const offset = -94;
       if (lenis && motionEnabled) {
         lenis.scrollTo(target, { offset });
       } else {
@@ -259,11 +268,28 @@
       storyLinks.forEach((a) => a.classList.toggle("is-active", a.dataset.storyLink === activeStoryId));
     }
 
-    // 3. Lift floating motion toggle cleanly above footer so it never overlaps Back to top
-    if (motionToggle && siteFooter) {
+    // 3. Circular Scroll-to-Top FAB visibility, ring progress & lift above footer
+    const scrollFab = qs("#scroll-top-fab");
+    if (scrollFab && siteFooter) {
+      const y = window.scrollY || window.pageYOffset;
+      scrollFab.classList.toggle("is-visible", y > 420);
       const footerTop = siteFooter.getBoundingClientRect().top;
-      motionToggle.classList.toggle("is-lifted", footerTop < window.innerHeight - 16);
+      scrollFab.classList.toggle("is-lifted", footerTop < window.innerHeight - 12);
     }
+  }
+
+  const scrollTopFab = qs("#scroll-top-fab");
+  const fabRingFill = qs("#fab-ring-fill");
+  const FAB_CIRCUMFERENCE = 119.38;
+
+  if (scrollTopFab) {
+    scrollTopFab.addEventListener("click", () => {
+      if (lenis && motionEnabled) {
+        lenis.scrollTo(0);
+      } else {
+        window.scrollTo({ top: 0, behavior: motionEnabled ? "smooth" : "auto" });
+      }
+    });
   }
 
   function onScroll() {
@@ -273,10 +299,14 @@
       const y = window.scrollY || window.pageYOffset;
       if (header) header.classList.toggle("is-scrolled", y > 14);
 
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+      const pct = max > 0 ? Math.min(1, Math.max(0, y / max)) : 0;
+
       if (progressBar) {
-        const max = document.documentElement.scrollHeight - window.innerHeight;
-        const pct = max > 0 ? Math.min(1, Math.max(0, y / max)) : 0;
         progressBar.style.transform = `scaleX(${pct})`;
+      }
+      if (fabRingFill) {
+        fabRingFill.style.strokeDashoffset = String(FAB_CIRCUMFERENCE * (1 - pct));
       }
 
       revealAboveFold();
@@ -693,6 +723,22 @@
     });
   }
 
+  const toastEl = qs("#copy-toast");
+  const toastTextEl = qs("#copy-toast-text");
+  let toastTimer = null;
+
+  function showToast(message) {
+    if (!toastEl || !toastTextEl) return;
+    toastTextEl.textContent = message;
+    toastEl.classList.add("is-visible");
+    toastEl.setAttribute("aria-hidden", "false");
+    if (toastTimer) window.clearTimeout(toastTimer);
+    toastTimer = window.setTimeout(() => {
+      toastEl.classList.remove("is-visible");
+      toastEl.setAttribute("aria-hidden", "true");
+    }, 2400);
+  }
+
   qsa("[data-copy-email]").forEach((btn) => {
     let resetTimer = null;
     btn.addEventListener("click", () => {
@@ -702,7 +748,12 @@
       copyText(email).then(() => {
         const statusEl = qs(".copy-pill__status", btn) || btn;
         const originalKey = statusEl.dataset.i18n || "common.copy";
-        statusEl.textContent = t("common.copied") || "Copied ✓";
+        const copiedLabel = t("common.copied") || "Copied ✓";
+        statusEl.textContent = copiedLabel;
+
+        showToast(
+          currentLang === "vi" ? `Đã sao chép ${email}` : `Copied ${email}`
+        );
 
         if (resetTimer) window.clearTimeout(resetTimer);
         resetTimer = window.setTimeout(() => {
@@ -738,6 +789,32 @@
     window.matchMedia && window.matchMedia("(hover: hover) and (pointer: fine)").matches;
 
   if (finePointer) {
+    // Mouse-tracking subtle spotlight hover on luxury cards
+    qsa(".spotlight-card").forEach((card) => {
+      card.addEventListener("mousemove", (e) => {
+        if (!motionEnabled) return;
+        const rect = card.getBoundingClientRect();
+        card.style.setProperty("--mx", `${(e.clientX - rect.left).toFixed(1)}px`);
+        card.style.setProperty("--my", `${(e.clientY - rect.top).toFixed(1)}px`);
+      });
+    });
+
+    // Ultra-gentle 3D luxury perspective tilt on Hero Portrait Card
+    qsa("[data-tilt]").forEach((card) => {
+      card.addEventListener("mousemove", (e) => {
+        if (!motionEnabled) return;
+        const rect = card.getBoundingClientRect();
+        const px = (e.clientX - rect.left) / rect.width - 0.5;
+        const py = (e.clientY - rect.top) / rect.height - 0.5;
+        const rotY = (px * 5.2).toFixed(2);
+        const rotX = (-py * 4.6).toFixed(2);
+        card.style.transform = `perspective(900px) rotateX(${rotX}deg) rotateY(${rotY}deg)`;
+      });
+      card.addEventListener("mouseleave", () => {
+        card.style.transform = "";
+      });
+    });
+
     // Magnetic buttons
     qsa(".magnetic").forEach((el) => {
       el.addEventListener("mousemove", (e) => {
