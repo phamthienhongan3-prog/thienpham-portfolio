@@ -2347,6 +2347,16 @@ html[data-motion="off"] .header-motion-btn__dot {
   color: var(--ink-2);
 }
 
+.skill-row {
+  gap: 6px;
+  padding-top: 2px;
+}
+
+.skill-row .tag {
+  font-size: 0.76rem;
+  padding: 4px 11px;
+}
+
 /* Streamlined Minimal Scopus Q3 Strip (Zero links, Zero ID clutter) */
 .q3-strip {
   margin-top: clamp(38px, 5vw, 58px);
